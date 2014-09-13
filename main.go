@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+const (
+	escape = "\x1b"
+)
+
 var (
 	projectRoot string
 	templates   *template.Template
@@ -28,9 +32,6 @@ func main() {
 	} else {
 		projectRoot = path.Join(goPath, "src", "github.com", "darthlukan", "AOW-Server")
 	}
-	// Move to site server
-	templates = template.Must(template.ParseGlob(projectRoot + "/html/*"))
-	//
 
 	// API Endpoints
 	goweb.Map("/ping", pingHandler)

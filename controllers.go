@@ -4,8 +4,6 @@ import (
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
 	"github.com/stretchr/objx"
-	"net/http"
-	"path"
 )
 
 func pingHandler(ctx context.Context) error {
