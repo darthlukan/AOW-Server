@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"github.com/Radiobox/web_responders"
 	"github.com/stretchr/goweb"
-	"html/template"
+	"io/ioutil"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 	"time"
 )
 
@@ -19,19 +21,38 @@ const (
 
 var (
 	projectRoot string
-	templates   *template.Template
+	bookPath    string
+	quotes      []string
 	goPath      = os.Getenv("GOPATH")
 	messages    = web_responders.NewMessageMap()
+	book        = "aow.txt"
 )
 
-func main() {
-	log.Println("Starting server...")
+func OpenBook(filename string) []string {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+
+	quotes := strings.Split(string(content), "\n\n")
+	return quotes
+}
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	if goPath == "" {
 		projectRoot = "."
 	} else {
 		projectRoot = path.Join(goPath, "src", "github.com", "darthlukan", "AOW-Server")
 	}
+
+	bookPath = path.Join(projectRoot, book)
+	quotes = OpenBook(bookPath)
+}
+
+func main() {
+	log.Println("Starting server...")
 
 	// API Endpoints
 	goweb.Map("/ping", pingHandler)
