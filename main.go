@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Radiobox/web_responders"
 	"github.com/stretchr/goweb"
@@ -26,7 +27,16 @@ var (
 	goPath      = os.Getenv("GOPATH")
 	messages    = web_responders.NewMessageMap()
 	book        = "aow.txt"
+	cfgFile     = "config.json"
 )
+
+type Config struct {
+	AndroidKey string
+	FFOSKey    string
+	TizenKey   string
+	WebKey     string
+	DevKey     string
+}
 
 func OpenBook(filename string) []string {
 	content, err := ioutil.ReadFile(filename)
@@ -39,6 +49,7 @@ func OpenBook(filename string) []string {
 }
 
 func init() {
+
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	if goPath == "" {
@@ -46,6 +57,15 @@ func init() {
 	} else {
 		projectRoot = path.Join(goPath, "src", "github.com", "darthlukan", "AOW-Server")
 	}
+
+	cfg, err := os.Open(cfgFile)
+	if err != nil {
+		panic(err)
+	}
+
+	decoder := json.NewDecoder(cfg)
+	config := &Config{}
+	decoder.Decode(&config)
 
 	bookPath = path.Join(projectRoot, book)
 	quotes = OpenBook(bookPath)
