@@ -28,6 +28,7 @@ var (
 	messages    = web_responders.NewMessageMap()
 	book        = "aow.txt"
 	cfgFile     = "config.json"
+	config      *Config
 )
 
 type Config struct {
@@ -64,7 +65,7 @@ func init() {
 	}
 
 	decoder := json.NewDecoder(cfg)
-	config := &Config{}
+	config = &Config{}
 	decoder.Decode(&config)
 
 	bookPath = path.Join(projectRoot, book)
